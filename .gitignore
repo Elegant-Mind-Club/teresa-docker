@@ -1,2 +1,4 @@
 container/teresa-simulation
 **/.DS_Store
+**/__pycache__
+**/venv

@@ -31,9 +31,8 @@ class Listener:
             try:
                 message = self.s.recv_string()
                 if message:
-                    # print(f"Got message: {message}")
-                    self.callback(message)
-                # self.callback(message)
+                    message_array = list(map(float, message.split(",")))
+                    self.callback(message_array)
             except Exception as e:
                 print(f"Something went wrong: {e}")
 
@@ -70,14 +69,19 @@ class SimVis:
                 "gripper_claw_b",
             ]
             for joint in subjoint_names:
+                index = self.model.joint(joint).qposadr[0]
                 self.data.ctrl[index] = joint_angle
                 self.data.qpos[index] = joint_angle
                 self.data.qvel[index] = 0
                 self.data.qacc[index] = 0
 
-    def set_absolute_position(self, joint):
+    def set_absolute_position(self, joints: list[float]):
         # joints: array of length 5 in radians specifying joint angles
-        self.set_joint("base_joint", "Servo", joint)
+        for joint_name, joint_value in zip(
+            ["base_joint", "shoulder_joint", "elbow_joint", "wrist_joint"], joints[0:-1]
+        ):
+            self.set_joint(joint_name, "Servo", joint_value)
+        self.set_joint("gripper_joint", "Gripper", joints[-1])
         mujoco.mj_step(self.model, self.data)
         self.viewer.sync()
 
@@ -89,6 +93,4 @@ class SimVis:
 
 
 if __name__ == "__main__":
-    # l = Listener(lambda data: print(data))
-    # l.start()
     v = SimVis()
