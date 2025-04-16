@@ -1,0 +1,149 @@
+<mujoco model="physics">
+  <compiler angle="radian"/>
+  <asset>
+    <mesh name="l5_1_A_link" file="meshes/L5_1_A.stl"/>
+    <mesh name="l5_1_B_link" file="meshes/L5_1_B.stl"/>
+    <mesh name="l5_3_A_link" file="meshes/L5_3_A.stl"/>
+    <mesh name="l5_3_B_link" file="meshes/L5_3_B.stl"/>
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1="1 1 1" rgb2=".2 .3 .4"/>
+    <material name="grid" texture="grid" texrepeat="1 1" texuniform="true" reflectance=".2"/>
+  </asset>
+   <contact>
+    <exclude body1="base_link" body2="base_servo"/>
+    <exclude body1="base_servo" body2="shoulder_servo"/>
+    <exclude body1="shoulder_servo" body2="elbow_servo"/>
+    <exclude body1="elbow_servo" body2="forearm_link"/>
+    <exclude body1="elbow_servo" body2="shoulder_servo"/>
+    <exclude body1="shoulder_servo" body2="forearm_link"/>
+    <exclude body1="forearm_link" body2="wrist_servo"/>
+    <!-- 1A 3A 1B 3B -->
+    <exclude body1="l5_1_A_link" body2="l5_3_A_link"/>
+    <exclude body1="l5_1_B_link" body2="l5_3_B_link"/>
+    <exclude body1="l5_1_B_link" body2="l5_3_A_link"/>
+    <exclude body1="l5_1_A_link" body2="l5_1_B_link"/>
+    <exclude body1="l5_1_A_link" body2="l5_3_B_link"/>
+    <exclude body1="l5_3_A_link" body2="l5_3_B_link"/>
+
+  </contact>
+  <default>
+    <joint damping="100" stiffness="0"/>
+  </default>
+  <worldbody>
+  <body name="base_link">
+    <geom type="box" size="0.06 0.0815 0.038" rgba="1 1 1 1"/>
+    <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+    <body name="base_servo">
+      <geom pos="0 0 0.08" type="box" size="0.04 0.06 0.038" rgba="1 1 1 1"/>
+      <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+      <body name="shoulder_servo">
+        <geom type="box" pos="0.0 0.01 0.2" size="0.0725 0.045 0.083" rgba="1 1 1 1"/>
+        <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+        <joint name="base_joint" pos="0 0 0" axis="0 0 1" range="-3.14 3.14" actuatorfrcrange="-1000 1000"/>
+        <body name="elbow_servo" pos="0 0.009 0.12">
+          <geom type="box" pos="0 -0.03 0.142" size="0.035 0.045 0.02" rgba="1 1 1 1"/>
+          <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+          <joint name="shoulder_joint" pos="0 0 0.09" axis="1 0 0" range="-1.57 1.57" actuatorfrcrange="-1000 1000"/>
+          <body name="forearm_link" pos="0 -0.032 0.05">
+            <geom type="box" pos="0 -0.03 0.24" size="0.03 0.035 0.14" rgba="1 1 1 1"/>
+            <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+            <joint name="elbow_joint" pos="0 -0.03 0.15" axis="1 0 0" range="-0.6 2.8" actuatorfrcrange="-1000 1000"/>
+            <body name="wrist_servo" pos="0 0 0.11">
+              <geom type="box" pos="0 -0.03 0.26" size="0.025 0.04 0.035" rgba="1 1 1 1"/>
+              <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+              <joint name="wrist_joint" pos="0 0 0.25" axis="0 1 0" range="-1.57 1.57" actuatorfrcrange="-1000 1000"/>
+              <!-- Gripper -->
+              <body name="l5_1_A_link" pos="0.00149 0.08 0.02" quat="0.707388 0.706825 0 0">
+                <geom pos="-0.015 0 -0.28" euler="0 0 0" type="mesh" rgba="1 1 1 1" mesh="l5_1_A_link"/>
+                <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+                <joint name="gripper_joint_a" pos="-0.01 0.311 0" axis="0 0 1" range="-1.57 0" actuatorfrcrange="-1000 1000"/>
+                <body name="l5_3_A_link" pos="-0.0432 0 -0.008">
+                  <geom pos="0.028 0.006 -0.28" type="mesh" rgba="1 1 1 1" mesh="l5_3_A_link"/>
+                  <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+                  <joint name="gripper_claw_a" pos="-0.01 0.311 0" axis="0 0 -1" range="-1.57 1.57" actuatorfrcrange="-1000 1000"/>
+                </body>
+              </body>
+              <!-- Other -->
+              <body name="l5_1_B_link" pos="0.006489 0.08 0.02" quat="0.707388 0.706825 0 0">
+                <geom pos="-0.02 0 -0.28" type="mesh" rgba="1 1 1 1" mesh="l5_1_B_link"/>
+                <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+                <joint name="gripper_joint_b" pos="0.005 0.311 0" axis="0 0 -1" range="-1.57 1.57" actuatorfrcrange="-1000 1000"/>
+                <body name="l5_3_B_link" pos="0.0432 0 -0.008">
+                  <geom pos="-0.063 0.007 -0.28" type="mesh" rgba="1 1 1 1" mesh="l5_3_B_link"/>
+                  <inertial pos="0 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="0.001 0.0006 0.0004"/>
+                  <joint name="gripper_claw_b" pos="0.006 0.311 0" axis="0 0 1" range="-1.57 1.57" actuatorfrcrange="-1000 1000"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </body>
+  </worldbody>
+  <actuator>
+    <position name="base_joint" 
+              joint="base_joint" 
+              kp="500"
+              gear="1"
+              forcerange="-1000 1000"
+              ctrlrange="-3.14 3.14"
+              ctrllimited="true"/>
+    <position name="shoulder_joint" 
+              joint="shoulder_joint" 
+              kp="500"
+              gear="1"
+              forcerange="-1000 1000"
+              ctrlrange="-1.57 1.57"
+              ctrllimited="true"/>
+    
+    <position name="elbow_joint" 
+              joint="elbow_joint" 
+              kp="500"
+              gear="1"
+              forcerange="-1000 1000"
+              ctrlrange="-0.6 2.8"
+              ctrllimited="true"/>
+
+    <position name="wrist_joint" 
+              joint="wrist_joint" 
+              kp="500"
+              gear="1"
+              forcerange="-1000 1000"
+              ctrlrange="-1.57 1.57"
+              ctrllimited="true"/>
+
+    <position name="gripper_joint_a" 
+              joint="gripper_joint_a" 
+              kp="500"
+              gear="1"
+              forcerange="-1000 1000"
+              ctrlrange="-1.57 0"
+              ctrllimited="true"/>
+    
+    <position name="gripper_joint_b" 
+              joint="gripper_joint_b" 
+              kp="500"
+              gear="1"
+              forcerange="-1000 1000"
+              ctrlrange="-1.57 0"
+              ctrllimited="true"/>
+
+    <position name="gripper_claw_a" 
+              joint="gripper_claw_a" 
+              kp="500"
+              gear="1"
+              forcerange="-1000 1000"
+              ctrlrange="-1.57 0"
+              ctrllimited="true"/>
+    
+    <position name="gripper_claw_b" 
+              joint="gripper_claw_b" 
+              kp="500"
+              gear="1"
+              forcerange="-1000 1000"
+              ctrlrange="-1.57 0"
+              ctrllimited="true"/>
+  </actuator>
+
+
+</mujoco>

@@ -1,0 +1,15 @@
+services:
+  teresa:
+    build: .
+    container_name: teresa_dev_env
+    networks:
+      - interop_net
+    volumes:
+      - ./container:/app
+    working_dir: /app
+    tty: true      # Keeps container running for interactive access
+    stdin_open: true
+
+networks:
+  interop_net:
+    driver: bridge
