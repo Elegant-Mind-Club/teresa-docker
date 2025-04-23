@@ -1,1 +1,0 @@
-docker exec -it teresa_dev_env bash

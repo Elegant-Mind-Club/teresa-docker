@@ -24,10 +24,10 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o 
 
 # Install ROS2 Humble
 RUN apt-get update && apt-get install -y \
-    ros-humble-desktop \
-    python3-colcon-common-extensions \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+ros-humble-desktop \
+python3-colcon-common-extensions \
+git \
+&& rm -rf /var/lib/apt/lists/*
 
 # Setup ROS environment
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
