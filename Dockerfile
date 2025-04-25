@@ -31,5 +31,6 @@ git \
 
 # Setup ROS environment
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
+RUN echo 'export PS1="teresa@emc "' >> /root/.bashrc
 
 WORKDIR /app
